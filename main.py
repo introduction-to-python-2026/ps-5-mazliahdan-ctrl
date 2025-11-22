@@ -1,5 +1,10 @@
 
+# From string_utils.py
+from string_utils import split_before_each_uppercases, split_at_first_digit, count_atoms_in_molecule
 
+# From equation_utils.py
+from equation_utils import generate_equation_for_element, build_equations, my_solve, ELEMENTS
+from sympy import symbols, Eq  # Needed if you use Eq or symbols directly in main.py
  
 
 
