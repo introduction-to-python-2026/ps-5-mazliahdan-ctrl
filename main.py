@@ -27,50 +27,10 @@ def count_atoms_in_molecule(molecular_formula):
     return atom_counts
 
 
-def generate_equation_for_element(compounds, coefficients, element):
-    """Generates a symbolic equation for the given element from compounds and coefficients.  
-    Example: For H in reactants [{'H': 2}, {'O': 4, 'H': 1}], coefficients [a0, a1], returns 2*a0 + a1."""
-    equation = 0
-    for i, compound in enumerate(compounds):
-        if element in compound:
-            equation += coefficients[i] * compound[element]
-    return equation
 
 
-def build_equations(reactant_atoms, product_atoms):
-    """Builds a list of symbolic equations for each element to balance a chemical reaction.  
-    Example: For H2 + O2 -> H2O, returns equations [2*a0 - 2*b0, a1 - b0]."""
-    ## coefficients ##
-    reactant_coefficients = list(symbols(f'a0:{len(reactant_atoms)}'))
-    product_coefficients = list(symbols(f'b0:{len(product_atoms)}')) 
-    product_coefficients = product_coefficients[:-1] + [1] # Ensure the last coefficient is 1
 
-    ## equations ##
-    equations = []
-    for element in ELEMENTS:
-        lhs = generate_equation_for_element(reactant_atoms, reactant_coefficients, element)
-        rhs = generate_equation_for_element(product_atoms, product_coefficients, element)
-        if lhs != 0 or rhs != 0:
-            equations.append(Eq(lhs, rhs))
 
-    return equations, reactant_coefficients + product_coefficients[:-1]
-
-from sympy import symbols, Eq, solve as sympy_solve
-def my_solve(equations, coefficients):
-    """Solves the system of equations for the coefficients of the reaction.  
-    Example: For equations [2*a0 - 2*b0, a1 - b0], returns [1.0, 1.0]."""
-    solution = sympy_solve(equations, coefficients)
-
-    if len(solution) == len(coefficients):
-        coefficient_values = list()
-        for coefficient in coefficients:
-            coefficient_values.append(float(solution[coefficient]))
-        return coefficient_valuesdef parse_chemical_reaction(reaction_equation):
-    """Takes a reaction equation (string) and returns reactants and products as lists.  
-    Example: 'H2 + O2 -> H2O' → (['H2', 'O2'], ['H2O'])"""
-    reaction_equation = reaction_equation.replace(" ", "")  # Remove spaces for easier parsing
-    reactants, products = reaction_equation.split("->")
-    return reactants.split("+"), products.split("+")
 
 def count_atoms_in_reaction(molecules_list):
     """Takes a list of molecular formulas and returns a list of atom count dictionaries.  
